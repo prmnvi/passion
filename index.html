@@ -1,193 +1,45 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My GitHub Pages Site</title>
     <style>
-        .countdown-container {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            max-width: 500px;
-            margin: 0 auto;
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            background: white;
         }
-        .project-title {
-            text-align: center;
-            font-size: 1.5rem;
-            font-weight: 600;
-            margin-bottom: 20px;
-            color: #2c3e50;
+        nav {
+            background-color: #f4f4f4;
+            padding: 1rem;
+            margin-bottom: 2rem;
         }
-        .countdown-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            text-align: center;
-            margin: 20px 0;
+        nav a {
+            margin-right: 1rem;
+            text-decoration: none;
+            color: #333;
         }
-        .countdown-box {
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 6px;
-            border: 1px solid #e9ecef;
+        nav a:hover {
+            color: #0366d6;
         }
-        .countdown-value {
-            font-size: 2rem;
-            font-weight: bold;
-            color: #2271b1;
-            font-family: monospace;
-        }
-        .countdown-label {
-            font-size: 0.9rem;
-            color: #6c757d;
-            margin-top: 5px;
-        }
-        .date-input {
-            width: 100%;
-            padding: 8px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        .project-input {
-            width: 100%;
-            padding: 8px;
-            margin: 10px 0;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        .settings-button {
-            background-color: #2271b1;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-        .settings-button:hover {
-            background-color: #135e96;
-        }
-        .settings-panel {
-            margin-top: 20px;
-            padding: 15px;
-            background: #f8f9fa;
-            border-radius: 6px;
-            border: 1px solid #e9ecef;
-        }
-        @media (max-width: 480px) {
-            .countdown-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
         }
     </style>
 </head>
 <body>
-    <div class="countdown-container">
-        <div id="projectTitle" class="project-title">Project Countdown</div>
-        <div class="countdown-grid">
-            <div class="countdown-box">
-                <div id="days" class="countdown-value">00</div>
-                <div class="countdown-label">Days</div>
-            </div>
-            <div class="countdown-box">
-                <div id="hours" class="countdown-value">00</div>
-                <div class="countdown-label">Hours</div>
-            </div>
-            <div class="countdown-box">
-                <div id="minutes" class="countdown-value">00</div>
-                <div class="countdown-label">Minutes</div>
-            </div>
-            <div class="countdown-box">
-                <div id="seconds" class="countdown-value">00</div>
-                <div class="countdown-label">Seconds</div>
-            </div>
-        </div>
-        
-        <button id="settingsToggle" class="settings-button">⚙️ Configure Timer</button>
-        
-        <div id="settingsPanel" class="settings-panel" style="display: none;">
-            <input type="text" id="projectName" class="project-input" placeholder="Enter Project Name">
-            <input type="datetime-local" id="targetDate" class="date-input">
-            <button onclick="saveSettings()" class="settings-button">Save Settings</button>
-        </div>
+    <div class="container">
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+        </nav>
+        <h1>Welcome to My Website</h1>
+        <p>This is the home page of my GitHub Pages website.</p>
     </div>
-
-    <script>
-        let targetDate = new Date();
-        targetDate.setDate(targetDate.getDate() + 30); // Default 30 days from now
-        let projectName = "Project Countdown";
-
-        // Load saved settings from localStorage
-        function loadSettings() {
-            const savedDate = localStorage.getItem('targetDate');
-            const savedName = localStorage.getItem('projectName');
-            
-            if (savedDate) {
-                targetDate = new Date(savedDate);
-                document.getElementById('targetDate').value = savedDate.slice(0, 16);
-            }
-            
-            if (savedName) {
-                projectName = savedName;
-                document.getElementById('projectTitle').textContent = savedName;
-                document.getElementById('projectName').value = savedName;
-            }
-        }
-
-        // Save settings to localStorage
-        function saveSettings() {
-            const newDate = document.getElementById('targetDate').value;
-            const newName = document.getElementById('projectName').value;
-            
-            if (newDate) {
-                targetDate = new Date(newDate);
-                localStorage.setItem('targetDate', newDate);
-            }
-            
-            if (newName) {
-                projectName = newName;
-                document.getElementById('projectTitle').textContent = newName;
-                localStorage.setItem('projectName', newName);
-            }
-            
-            document.getElementById('settingsPanel').style.display = 'none';
-        }
-
-        // Toggle settings panel
-        document.getElementById('settingsToggle').addEventListener('click', function() {
-            const panel = document.getElementById('settingsPanel');
-            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
-        });
-
-        // Update countdown
-        function updateCountdown() {
-            const now = new Date().getTime();
-            const distance = targetDate.getTime() - now;
-
-            if (distance < 0) {
-                document.getElementById('days').textContent = '00';
-                document.getElementById('hours').textContent = '00';
-                document.getElementById('minutes').textContent = '00';
-                document.getElementById('seconds').textContent = '00';
-                return;
-            }
-
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-            document.getElementById('days').textContent = days.toString().padStart(2, '0');
-            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
-            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
-            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
-        }
-
-        // Initialize
-        loadSettings();
-        updateCountdown();
-        setInterval(updateCountdown, 1000);
-    </script>
 </body>
 </html>
+
