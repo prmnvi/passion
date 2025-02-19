@@ -1,0 +1,155 @@
+import React, { useState, useEffect, useCallback } from 'react';
+import { Play, Pause, RotateCcw, Settings } from 'lucide-react';
+import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Slider } from '@/components/ui/slider';
+import { Progress } from '@/components/ui/progress';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+
+const PomodoroTimer = () => {
+  const [timeLeft, setTimeLeft] = useState(25 * 60);
+  const [isRunning, setIsRunning] = useState(false);
+  const [isWorkTime, setIsWorkTime] = useState(true);
+  const [sessions, setSessions] = useState(0);
+  const [workDuration, setWorkDuration] = useState(25);
+  const [breakDuration, setBreakDuration] = useState(5);
+  const [totalTime, setTotalTime] = useState(25 * 60);
+  const [showSettings, setShowSettings] = useState(false);
+
+  // Create audio elements
+  const timerEndSound = new Audio('data:audio/wav;base64,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');
+  
+  const playSound = useCallback(() => {
+    timerEndSound.play().catch(error => console.log('Audio play failed:', error));
+  }, []);
+
+  useEffect(() => {
+    let interval = null;
+    
+    if (isRunning && timeLeft > 0) {
+      interval = setInterval(() => {
+        setTimeLeft(prev => prev - 1);
+      }, 1000);
+    } else if (timeLeft === 0) {
+      playSound();
+      if (isWorkTime) {
+        setSessions(prev => prev + 1);
+        setTimeLeft(breakDuration * 60);
+        setTotalTime(breakDuration * 60);
+      } else {
+        setTimeLeft(workDuration * 60);
+        setTotalTime(workDuration * 60);
+      }
+      setIsWorkTime(!isWorkTime);
+      setIsRunning(false);
+    }
+    
+    return () => clearInterval(interval);
+  }, [isRunning, timeLeft, isWorkTime, workDuration, breakDuration, playSound]);
+  
+  const toggleTimer = () => {
+    setIsRunning(!isRunning);
+  };
+  
+  const resetTimer = () => {
+    setIsRunning(false);
+    setIsWorkTime(true);
+    setTimeLeft(workDuration * 60);
+    setTotalTime(workDuration * 60);
+    setSessions(0);
+  };
+  
+  const formatTime = (seconds) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  const progress = ((totalTime - timeLeft) / totalTime) * 100;
+  
+  return (
+    <Card className="w-80">
+      <CardHeader className="flex flex-row items-center justify-between">
+        <CardTitle className="text-center flex-1">
+          {isWorkTime ? 'Work Time' : 'Break Time'}
+        </CardTitle>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant="ghost" size="icon" className="h-8 w-8">
+              <Settings size={16} />
+            </Button>
+          </DialogTrigger>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Timer Settings</DialogTitle>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div className="grid gap-2">
+                <label>Work Duration (minutes): {workDuration}</label>
+                <Slider 
+                  value={[workDuration]}
+                  onValueChange={([value]) => setWorkDuration(value)}
+                  min={1}
+                  max={60}
+                  step={1}
+                />
+              </div>
+              <div className="grid gap-2">
+                <label>Break Duration (minutes): {breakDuration}</label>
+                <Slider 
+                  value={[breakDuration]}
+                  onValueChange={([value]) => setBreakDuration(value)}
+                  min={1}
+                  max={30}
+                  step={1}
+                />
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+      </CardHeader>
+      <CardContent>
+        <div className="flex flex-col items-center gap-4">
+          <div className="text-4xl font-bold">
+            {formatTime(timeLeft)}
+          </div>
+          
+          <Progress value={progress} className="w-full h-2" />
+          
+          <div className="flex gap-2">
+            <Button 
+              variant="outline" 
+              size="icon"
+              onClick={toggleTimer}
+              className="w-10 h-10"
+            >
+              {isRunning ? <Pause size={20} /> : <Play size={20} />}
+            </Button>
+            
+            <Button 
+              variant="outline" 
+              size="icon"
+              onClick={resetTimer}
+              className="w-10 h-10"
+            >
+              <RotateCcw size={20} />
+            </Button>
+          </div>
+          
+          <div className="text-sm text-gray-500 text-center">
+            Sessions completed: {sessions}
+          </div>
+          
+          <div className="text-sm text-gray-500 text-center">
+            {isWorkTime ? 
+              'Focus on your task!' : 
+              'Take a short break!'
+            }
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
+export default PomodoroTimer;
